@@ -1,0 +1,14 @@
+   cost+=c[a][b]; /* adds the minimum cost */
+   visited[b]=1;
+   count++;
+  } //end while
+  printf("Total cost of Spanning tree is %d",cost); /* cost holds the minimum cost of the MST */
+ }
+   cost+=c[a][b]; /* adds the minimum cost */
+   visited[b]=1;
+   count++;
+  } //end while
+  printf("Total cost of Spanning tree is %d",cost); /* cost holds the minimum cost of the MST */
+ }
+
+
