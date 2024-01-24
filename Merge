@@ -1,0 +1,101 @@
+#include <iostream>
+#include <sys/time.h>
+#include <time.h>
+#include <sys/resource.h>
+
+using namespace std;  // Added for convenience
+
+// Function to merge two subarrays of 'input' array
+void merge(int input[], int l, int m, int r) {
+    int n1 = m - l + 1;
+    int n2 = r - m;
+    int L[n1], R[n2];
+
+    // Copy data to temporary arrays L[] and R[]
+    for (int i = 0; i < n1; i++)
+        L[i] = input[l + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = input[m + 1 + j];
+
+    int i = 0, j = 0, k = l;
+
+    // Merge the two subarrays back into the original array 'input'
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            input[k] = L[i];
+            i++;
+        } else {
+            input[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy the remaining elements of L[] and R[] (if any)
+    while (i < n1) {
+        input[k] = L[i];
+        i++;
+        k++;
+    }
+    while (j < n2) {
+        input[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+// Function to perform merge sort on 'input' array
+void merge_sort(int input[], int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+
+        // Recursively divide and merge the subarrays
+        merge_sort(input, l, m);
+        merge_sort(input, m + 1, r);
+
+        // Merge the divided subarrays
+        merge(input, l, m, r);
+    }
+}
+
+int main() {
+    struct timeval tv1, tv2;
+    int size, input[50], i;
+    struct rusage r_usage;
+
+    // Prompt the user to enter the input size and array elements
+    cout << "Enter the file size: " << endl;
+    cin >> size;
+    cout << "Enter the file Id's: " << endl;
+
+for (i = 0; i < size; i++) {
+        cin >> input[i];
+    }
+
+    // Measure the start time for the sorting process
+    gettimeofday(&tv1, NULL);
+
+    // Call the merge_sort function to sort the array
+    merge_sort(input, 0, size - 1);
+
+    // Measure the end time after sorting
+    gettimeofday(&tv2, NULL);
+
+    // Display the sorted array
+    cout << "\nSorted array is: " << endl;
+    for (i = 0; i < size; i++) {
+        cout << input[i] << "\t";
+    }
+
+    // Calculate and display the execution time in microseconds and seconds
+    double time_microseconds = (double)(tv2.tv_usec - tv1.tv_usec);
+    double time_seconds = (double)(tv2.tv_usec - tv1.tv_usec) / 1000000 +
+        (double)(tv2.tv_sec - tv1.tv_sec);
+
+    cout << "Time of merge sort = " << time_microseconds << " microseconds" << endl;
+    cout << "Total time = " << time_seconds << " seconds" << endl;
+
+    // Measure and display the memory usage in kilobytes
+    getrusage(RUSAGE_SELF, &r_usage);    
+    cout << "Memory usage: " << r_usage.ru_maxrss << " kilobytes" << endl;
+}
