@@ -1,0 +1,46 @@
+import java.util.*;
+public class BFSExample 
+{
+    static void BFS(int[][] a, int source, int[] visited, int n) 
+    {
+        int[] queue = new int[20];
+        int f = 0, r = -1, u, v;
+        queue[++r] = source;
+        while (f <= r) 
+        {
+            u = queue[f++];
+            for (v = 1; v <= n; v++)
+            {
+                if (a[u][v] == 1 && visited[v] == 0) 
+                {
+                    queue[++r] = v;
+                    visited[v] = 1;
+                }
+            }
+        }
+    }
+    public static void main(String[] args) 
+    {
+        Scanner scanner = new Scanner(System.in);
+        int n, a[][] = new int[20][20], i, j, visited[] = new int[20], source;
+        System.out.print("Enter the number of vertices: ");
+        n = scanner.nextInt();
+        System.out.println("\nEnter the adjacency matrix:");
+        for (i = 1; i <= n; i++)
+            for (j = 1; j <= n; j++)
+                a[i][j] = scanner.nextInt();
+        for (i = 1; i <= n; i++)
+            visited[i] = 0;
+        System.out.print("\nEnter the source node: ");
+        source = scanner.nextInt();
+        visited[source] = 1;
+        BFS(a, source, visited, n);
+        for (i = 1; i <= n; i++) 
+        {
+            if (visited[i] != 0)
+                System.out.println("\n Node " + i + " is reachable");
+            else
+                System.out.println("\n Node " + i + " is not reachable");
+        }
+    }
+}
