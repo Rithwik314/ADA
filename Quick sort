@@ -1,0 +1,71 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <sys/resource.h>
+using namespace std;
+int partition(int a[], int low, int high);
+
+void quick_sort(int a[], int low, int high) {
+    int j;
+    if (low < high) {
+        j = partition(a, low, high);
+        quick_sort(a, low, j - 1);
+        quick_sort(a, j + 1, high);
+    }
+}
+
+int partition(int a[], int low, int high) {
+    int i, j, temp, pivot;
+    pivot = a[low];
+    i = low + 1;
+    j = high;
+while (true) {
+        while (i < high && a[i] <= pivot)
+            i++;
+        while (a[j] > pivot)
+            j--;
+        if (i < j) {
+            temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
+        } else {
+            temp = a[j];
+            a[j] = a[low];
+            a[low] = temp;
+            return j;
+        }
+    }
+}
+
+int main() {
+    int n;
+    double clk;
+    clock_t starttime, endtime;
+
+    cout << "Enter the number of items: " << endl;
+    cin >> n;
+    cout<<"Enter the elements"<<endl;
+    int a[200000];
+    for (int i = 0; i < n; i++) {
+        cin>>a[i];
+        cout << "elements: " << a[i] <<endl;
+    }
+
+    starttime = clock();
+    quick_sort(a, 0, n - 1);
+    endtime = clock();
+    clk = static_cast<double>(endtime - starttime) / CLOCKS_PER_SEC;
+
+    cout << "\nSorted : " <<endl;
+    for (int i = 0; i < n; i++) {
+        cout << a[i] << "\t";
+    }
+
+    cout << "\nThe run time is " << clk << " seconds" <<endl;
+
+    // Measure and display the memory usage in kilobytes
+    struct rusage r_usage;
+    getrusage(RUSAGE_SELF, &r_usage);
+    cout << "Memory usage: " << r_usage.ru_maxrss << " kilobytes" << endl;
+
+    return 0;
